@@ -41,17 +41,19 @@ The success of the sheath segmentation can be judged in the polar domain by chec
 
 ![Alt Text](docs/Sheath3.png)
 
-Finally, by pressing **Segment lumen** the lumen segmentation process begins. This should take less than 30 minutes on a laptop.
-The success of the lumen segmentation can be judged in both the polar and cartesian domains. The save button can then be used to save the image and the lumen/sheath contours.
+There are 2 choices for lumen segmentation. These options can be selected by the **Segment lumen** or **Threshold lumen** button. The **Segment lumen** method should take less than 30 minutes on a laptop.
+The success of the lumen segmentation can be judged in both the polar and cartesian domains. 
+The second method of segmenting the lumen is through thresholding with the **Threshold lumen** button. This can be applied at the individual slice level or at all levels by checking the **Threshold all** box.
 
 ![Alt Text](docs/Lumen.png)
 
 If some of the lumen contours are not satifactory these can be edited by pressing the **Edit lumen** button.
-This creates a crosshair which can be used to select points in the cartesian view and move these points to a new position. 
-After placing the points in new positions the return button completes the process
+This generates a spline where the points can be moved from until satisfied. When satisfied with the position of the points press the **Recompute** button.
 
 ![Alt Text](docs/Edit.png)
 
+The **Copy lumen** button will copy the contour from the previous image to the current image
+Both the sheath and the lumen contours can be saved and  loaded by the **Save** and **Load lumen** buttons respectively.
 
 ## Requirements
-The code has been tested on Matlab R2016b. It requires the signal processing and image processing toolboxes
+The code has been tested on Matlab R2016b. It requires the signal processing and image processing toolboxes. This code also adapts the interactive spline code *splineroi* from [here](https://www.mathworks.com/matlabcentral/fileexchange/23337-interactive-spline-region-of-interest) for manual editing.
