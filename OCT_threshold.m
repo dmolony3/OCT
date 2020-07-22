@@ -15,7 +15,7 @@ for i = 1:length(OCT_gw(1,1,:))
     
     % set threshold based on whether images are uint8 or uint16
     if max(OCT_gw(:)) <= 255
-        threshold = 100;
+        threshold = 80;
     else
         threshold = 100;
     end

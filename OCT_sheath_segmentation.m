@@ -14,8 +14,12 @@ function OCT_sheath = OCT_sheath_segmentation(OCT_polar, output_size)
 % open a window that allows for an interactive measure of the sheath radius
 % by selecting 2 points on the sheath
 OCT_image= Polar2Im(double(OCT_polar(:,:,8)'), output_size, 'linear');
-% figure, imshow(OCT_image(output_size/2-70:output_size/2+70,output_size/2-70:output_size/2+70),[0 300])
-figure, imshow(OCT_image(output_size/2-100:output_size/2+100,output_size/2-100:output_size/2+100),[0 300])
+
+fig = figure;
+imshow(OCT_image(output_size/2-100:output_size/2+100,output_size/2-100:output_size/2+100),[0 300])
+fig.set('units','normalized','outerposition',[0 0 1 1])
+title('Place 2 points that define the diameter of the outer sheath, then press return. Next place 2 points that describe the inner diameter of the sheath, then press return')
+
 [x y] = getpts();
 r_o = sqrt((x(1) - x(2)).^2 + (y(1) - y(2)).^2)/2;
 hold on, plot(x, y, 'r')

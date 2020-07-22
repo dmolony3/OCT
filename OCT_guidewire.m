@@ -132,8 +132,8 @@ for j = 1:length(optimal_path);
     % the shadow width
     shadow_width = 81.572*exp(-0.007*gw_depth);
     % add the width either side of the center of the brightness artifact
-    gw_shadow(2, j) = gw_shadow(1, j) + round(shadow_width/2)+5;
-    gw_shadow(1, j) = gw_shadow(1, j) - round(shadow_width/2)-5;    
+    gw_shadow(2, j) = gw_shadow(1, j) + round(shadow_width/2)+20;
+    gw_shadow(1, j) = gw_shadow(1, j) - round(shadow_width/2)-20;    
 end
 
 % if any values are greater than the length of the original image these

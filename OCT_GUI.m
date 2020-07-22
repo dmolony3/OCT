@@ -59,7 +59,7 @@ uicontrol('Parent', GUI.Fig, 'style','pushbutton','units', 'normalized', ...
 GUI.OCT_image = 1;
 
 GUI.Txt = uicontrol('Style', 'text',  'Units', 'Normalized', 'FontSize', 14, 'FontWeight', 'bold', ...
-    'Position', [0.05 0.9 0.1 0.025], 'String',strcat('Current Frame :', num2str(GUI.OCT_image)));
+    'Position', [0.05 0.9 0.125 0.025], 'String',strcat('Current Frame :', num2str(GUI.OCT_image)));
 
 % edit and text boxes for guidewire thresholds
 img_cath_threshold = 0.2;
@@ -100,7 +100,7 @@ function update_display()
     cla(GUI.Ax2)
     imshow(OCT_cart(:,:,GUI.OCT_image), [0 250], 'Parent', GUI.Ax1)
     imshow(OCT_gw(:,:,GUI.OCT_image), [0 250], 'Parent', GUI.Ax2)
-    set(GUI.Txt, 'string', strcat('Current Frame', num2str(GUI.OCT_image)));
+    set(GUI.Txt, 'string', strcat('Current Frame :', num2str(GUI.OCT_image)));
     plot(OCT_sheath(:,GUI.OCT_image), 1:length(OCT_gw(:, 1, 1)), 'Parent', GUI.Ax2)
     if ~isempty(OCT_contour_cart{GUI.OCT_image})
         plot(OCT_contour_cart{GUI.OCT_image}(:, 1), OCT_contour_cart{GUI.OCT_image}(:, 2), 'Parent', GUI.Ax1)
@@ -291,9 +291,20 @@ end
 function load_seg(hObj, eventdata)
     % load a previously saved contour segmentation
     [fname pname] = uigetfile('*.mat', 'Load mat file containing saved contour');
-    OCT_contour_cart = load(strcat(pname, fname), 'OCT_contour_cart');
-    OCT_contour_cart = OCT_contour_cart.OCT_contour_cart;
-    OCT_lumen_contour  = contour2pol(OCT_contour_cart, OCT_polar, output_size);
+    data = load(strcat(pname, fname));
+    
+    if isempty(OCT_cart) && ~isfield(data, 'OCT_cart')
+        errordlg('Please load OCT pullback first', 'Load Error')
+    end
+    
+    if isfield(data, 'OCT_contour_cart')
+        OCT_contour_cart = data.OCT_contour_cart;
+        OCT_lumen_contour  = contour2pol(OCT_contour_cart, OCT_polar, output_size);
+    end
+    
+    if isfield(data, 'OCT_sheath')
+        OCT_sheath = data.OCT_sheath;   
+    end
 end
 
 function save_seg(hObj, eventdata)
@@ -312,7 +323,7 @@ function copy_seg (hObj ,eventdata)
     cla(GUI.Ax2)
     imshow(OCT_cart(:,:,GUI.OCT_image), [0 250], 'Parent', GUI.Ax1)
     imshow(OCT_gw(:,:,GUI.OCT_image), [0 250], 'Parent', GUI.Ax2)
-    set(GUI.Txt, 'string', strcat('Current Frame', num2str(GUI.OCT_image)));
+    set(GUI.Txt, 'string', strcat('Current Frame :', num2str(GUI.OCT_image)));
     plot(OCT_sheath(:,GUI.OCT_image), 1:length(OCT_polar(:, 1, 1)), 'Parent', GUI.Ax2)
     plot(OCT_contour_cart{GUI.OCT_image}(:, 1), OCT_contour_cart{GUI.OCT_image}(:, 2), 'Parent', GUI.Ax1)
     plot(OCT_lumen_contour(:, GUI.OCT_image), 1:length(OCT_polar(:, 1, 1)), 'Parent', GUI.Ax2)
