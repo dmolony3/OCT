@@ -125,15 +125,18 @@ function load_images(hObj, eventdata)
     OCT_contour_cart = cell(length(OCT_cart(1,1,:)), 1);
     OCT_sheath = zeros(length(OCT_polar(:,1,1)), length(OCT_polar(1,1,:)));
 
-    % create slider
+    create_slider()
+end
+
+function create_slider()
+    % creates slider
     GUI.s1 = uicontrol('Parent', GUI.Fig, 'Style', 'slider', 'units', 'normalized',...
     'Min', 1, 'Max',length(OCT_cart(1,1,:)),'Value',1,'Position', [0.2 0.9 0.3 0.05],...
         'sliderstep', [1/length(OCT_cart(1,1,:)) 10/length(OCT_cart(1,1,:))], 'Callback', @slide_images); 
     imshow(OCT_cart(:,:,GUI.OCT_image), [0 250], 'Parent', GUI.Ax1)
     imshow(OCT_gw(:,:,GUI.OCT_image), [0 250], 'Parent', GUI.Ax2)
     hold(GUI.Ax1, 'on')
-    hold(GUI.Ax2, 'on')
-
+    hold(GUI.Ax2, 'on')    
 end
 
 function segment_gw(hObj, eventdata)
@@ -295,6 +298,15 @@ function load_seg(hObj, eventdata)
     
     if isempty(OCT_cart) && ~isfield(data, 'OCT_cart')
         errordlg('Please load OCT pullback first', 'Load Error')
+    elseif isempty(OCT_cart)
+        OCT_cart = data.OCT_cart;
+    end
+    
+    if isempty(OCT_polar) && isfield(data, 'OCT_polar')
+        OCT_polar = double(data.OCT_polar);
+        if isempty(OCT_gw)
+            OCT_gw = OCT_polar;
+        end
     end
     
     if isfield(data, 'OCT_contour_cart')
@@ -305,12 +317,18 @@ function load_seg(hObj, eventdata)
     if isfield(data, 'OCT_sheath')
         OCT_sheath = data.OCT_sheath;   
     end
+    
+    if ~isfield(GUI, 's1')
+        create_slider()
+    end
+    update_display();
 end
 
 function save_seg(hObj, eventdata)
     % saves data
     fname = inputdlg('Enter filename');
     fname = strcat(fname, '_OCT_segmentation.mat');
+    OCT_polar = uint16(OCT_polar);
     save(fname{1}, 'OCT_cart', 'OCT_polar', 'OCT_contour_cart', 'OCT_sheath', 'OCT_lumen_contour')
 end
 
